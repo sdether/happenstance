@@ -15,7 +15,7 @@ The network is defined as a number of interoperating systems, that together form
 
 ### Identity
 
-The Identity server provides the status feed lookup for **user@host** identities. It MUST provide a single API endpoint for looking up users, although there is no prohibition against alternative lookup endpoints and methods.
+The Identity server provides the status feed lookup for **{user}@{host}** identities. It MUST provide a single API endpoint for looking up users, although there is no prohibition against alternative lookup endpoints and methods.
 
 **GET:/who/{user}**
 ```javascript
@@ -26,6 +26,11 @@ The Identity server provides the status feed lookup for **user@host** identities
   feed.uri: 'http:/droogindustries.com/status/feed.hsf',
   sig: '4AQlP4lP0xGaDAMF6CwzAQ'
 }
+```
+
+A domain's status nameserver is expected to live at **status.{host}**, unless a DNS SRV record exists for the {host}:
+```
+_happenstance-ns._tcp.{host}. TTL IN SRV 5 0 {port} {status host}
 ```
 
 ### Status Feed
