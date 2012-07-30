@@ -75,12 +75,19 @@ The minimum requirement for the meta data is defined below. Additional informati
 }
 ```
 #### Entry
+
+Entries are the status updates. They should be considered write-only, since once published, copies will exist in many downstream data-stores. There is a mechanism for advisory updates and deletes using `updates.id` and `deletes.id` keys, but it is up to the downstream implementer to determine whether those entries are respected, used to create revision history or applied permanently. The minimum set (except for `deletes.id` entries is:
 ```javascript
 {
-  
+  sig: 'aadefbd0d0bc39a062f87107de126293d85347775152328bf464908430712789',
+  id: '4AQlP4lP0xGaDAMF6CwzAQ'
+  author.id: 'joe@drooginstustries.com',
+  author.name: 'Joe Smith',
+  status.uri: 'http://droogindustries.com/status',
+  feed.uri: 'http:/droogindustries.com/status/feed.hsf',
 }
 ```
-
+It is suggested that entries also include an `href` to access the original, but it is not required.
 ### Aggregation
 
 ### PubSub
@@ -90,3 +97,5 @@ The minimum requirement for the meta data is defined below. Additional informati
 ### Content Signing
 
 To generate or check a SHA256 signature hash for a json body in happenstance, the key value pairs are appended in alphanumeric order, skipping the `sig` key. Compound values are appended as if they were simply keys in the parent object. The resulting string is hashed and then signed with the private key.
+
+Keys that start with underscore are ommitted from signature calculation. This is done so that downstream consumers of messages can attach meta-data without invalidating the signature and clearly separates non-trusted keys from trusted keys.
