@@ -49,12 +49,25 @@ The link takes the form of:
 The document itself contains two sets of information, the feed meta data and a subset of the feed entries.
 ```javascript
 {
-  meta: {metadata},
+  author: {metadata},
   entries: [{entry}, ...]
+  subscriptions: [
+    {
+      id: 'bob@drooginstustries.com',
+      name: 'Bob Jones',
+      profile_image.uri: 'http://droogindustries.com/bob.jpg',
+      status.uri: 'http://droogindustries.com/bob/status',
+      feed.uri: 'http://droogindustries.com/bob/status/feed',
+    },
+    ...
+  ]
 }
 ```
+Subscriptions is an optional way to display what users the feed owner follows, but is not required. Generally subscriptions are handled by aggregation servers and do not have to be public.
 
-#### Meta Data
+For paging, two additional keys that may exist in the feed are `previous.uri` and `next.uri`. These keys allow callers to page through the feed without needing to know the implementation of the feed's API. 
+
+#### Author Data
 
 The minimum requirement for the meta data is defined below. Additional information can be added as desired by implemented, although it is generally good form to use a single key and stuff the desired content into a sub-object.
 
@@ -64,15 +77,15 @@ The minimum requirement for the meta data is defined below. Additional informati
   id: 'joe@drooginstustries.com',
   name: 'Joe Smith',
   profile_image.uri: 'http://droogindustries.com/joe.jpg',
-  status.uri: 'http://droogindustries.com/status',
-  feed.uri: 'http:/droogindustries.com/status/feed',
+  status.uri: 'http://droogindustries.com/bob/status',
+  feed.uri: 'http:/droogindustries.com/bob/status/feed',
   public.key: 'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
   previous.keys: [
     'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
     ],
   previous.ids: [ 'joseph@smith.com' ],
-  publishers: ['http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX']
-  aggregators: ['http://aggro.droogindustries.com/aggro'
+  publishers: ['http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX'],
+  aggregators: ['http://aggro.droogindustries.com/aggro/AgMBAAEwDQYJKoZIhvcNA']
 }
 ```
 #### Entry
@@ -82,14 +95,14 @@ Entries are the status updates. They should be considered write-only, since once
 {
   sig: 'aadefbd0d0bc39a062f87107de126293d85347775152328bf464908430712789',
   id: '4AQlP4lP0xGaDAMF6CwzAQ'
-  href: 'http://droogindustries.com/status/feed/4AQlP4lP0xGaDAMF6CwzAQ',
+  href: 'http://droogindustries.com/joe/status/feed/4AQlP4lP0xGaDAMF6CwzAQ',
   created_at: ''2012-07-30T11:31:00Z',
   author: {
     id: 'joe@drooginstustries.com',
     name: 'Joe Smith',
     profile_image.uri: 'http://droogindustries.com/joe.jpg',
-    status.uri: 'http://droogindustries.com/status',
-    feed.uri: 'http://droogindustries.com/status/feed',
+    status.uri: 'http://droogindustries.com/joe/status',
+    feed.uri: 'http://droogindustries.com/joe/status/feed',
   },
   text: 'Hey #{bob}, current status #{beach} #{vacation}',
   entities: {
@@ -100,17 +113,52 @@ Entries are the status updates. They should be considered write-only, since once
 }
 ```
 
-For re-posting someone else's status update, a `repost` key containing their full entry is included, while the `text` can be used to add additional commentary. Additional optional fields are specified in the separate message spec.
+For re-posting someone else's status update, a `repost.href` key containing the original posts href can be included. In addition, it is recommended to also include the full entry under the `_repost` key (omitting it from signature requirements). The `text` of the status update can be used to add additional commentary.
+
+Additional optional fields are specified in the separate message spec.
 
 While there is no way to enforce content size, since the content will replicated across the network and is meant as a status network not forum, the `text` field is assumed to be limited to 1000 characters and implementers are free to drop of truncate (which invalidates the signature) long messages.
 
+#### Authoring
+
+While the feed is designed that it can be represented by static files, the authoring tool responsible for creating the status content bears the additional responsibility of pushing messages to the **PubSub** servers listed in `author.publishers` as described in the [PubSub](#pubsub) section.
+
 ### Aggregation
+
+Aggregation server collect status updates for users to create their timeline. In general, aggregation servers will receive events from **PubSub** servers, but the same expected API is also used to push _mentions_ and private messages to a user.
+
+The only required API for an aggregation server is rooted at any uri provided in the `author.aggregators` list in a user's feed. This endpoint is expected to accept POST messages with a body of `{ entries: [{entry}, ...] }`.
+
+Since this endpoint will likely be the target of spammers, implementers are advised to include some defensive mechanisms, such as whitelisting senders to subscribed feeds only or checking the entries for a valid source feed and signature, etc.
 
 ### PubSub
 
+The PubSub server is responsible to publishing status updates to all subscribers. The only API required is rooted at any uri provided in the `author.publishers` list in a user's feed. The methods supported by the endpoint are:
+
+**POST:**
+```javascript
+{
+  callback.uri: 'http://aggro.droogindustries.com/aggro/AgMBAAEwDQYJKoZIhvcNA',
+  auth.header: 'X-Auth: wNTI1MDIwODUxWjAjMQs'
+}
+```
+_Response: **201 Created**_
+```javascript
+{
+  subscription.uri: '',
+}
+```
+The response also contains the subscription.uri in the location header. The optional `auth.header` in the POST will be included as a header in each publish callback, as will the location of the subscription (so that upon receiving a publication POST, the receiver can identify the caller in case the information was lost.
+
+To delete an existing subscription the **PubSub** server must implement the DELETE call:
+
+**DELETE:{subscrition-location}**
+
+PubSub may also implement an API for setting up subscription endpoints that the feed owner uses to set up the subscription, but is not required and the API has no standard prescriptions.
+
 ### Discovery
 
-### Content Signing
+## Content Signing
 
 To generate or check a SHA256 signature hash for a json body in happenstance, the key value pairs are appended in alphanumeric order, skipping the `sig` key. Compound values are appended as if they were simply keys in the parent object. The resulting string is hashed and then signed with the private key.
 
