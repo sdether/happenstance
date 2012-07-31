@@ -145,18 +145,24 @@ The PubSub server is responsible to publishing status updates to all subscribers
 _Response: **201 Created**_
 ```javascript
 {
-  subscription.uri: '',
+  subscription.uri: 'http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX/subscription/wDQYJKoZIhvcNAQEBBQADgY0AM',
 }
 ```
-The response also contains the subscription.uri in the location header. The optional `auth.header` in the POST will be included as a header in each publish callback, as will the location of the subscription (so that upon receiving a publication POST, the receiver can identify the caller in case the information was lost.
+The response also contains the `subscription.uri` in the location header. The optional `auth.header` in the POST will be included as a header in each publish callback, as will the location of the subscription (so that upon receiving a publication POST, the receiver can identify the caller in case the information was lost.
 
 To delete an existing subscription the **PubSub** server must implement the DELETE call:
 
-**DELETE:{subscrition-location}**
+**DELETE:{subscrition.uri}**
 
 PubSub may also implement an API for setting up subscription endpoints that the feed owner uses to set up the subscription, but is not required and the API has no standard prescriptions.
 
 ### Discovery
+
+Discovery has no formal definition. It is comprised with organic discovery via reposts and browsing the subscriptions of the user you are subscribed out and discovery from various search indicies.
+
+Given that anyone can get real-time feeds delivery and the feeds of anyone mentioned in an entry or can be discovered via the name-servers it is relatively simple to get access to the communications of the ecosystem for permanent or ephemeral, complete or partial indexing as a service.
+
+Aggregators will likely want to integrate search greater than the data that passes through them, so they are the most likely customers of such services, but such integration will be custom and would not benefit for a formal definition at this stage of the ecosystem.
 
 ## Content Signing
 
