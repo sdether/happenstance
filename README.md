@@ -13,7 +13,7 @@ Before going into details of how the network is constructed, here's a 10k ft. vi
 * [Status Feed](#status-feed) pushes entry to [PubSub](#pubsub)
 * [PubSub](#pubsub) pushes entry to recipients
   * entry is pushed to all its subscribers, generally [Aggregation](#aggregation) servers
-  * Identity Entities in entries ( _mentions_ ) are resolved via the appropriate [Identity](#identity) server to locate the resposible Aggregation](#aggregation) servers, and pushed to those servers
+  * Identity Entities in entries ( _mentions_ ) are resolved via the appropriate [Identity](#identity) server to locate the resposible [Aggregation](#aggregation) servers, and pushed to those servers
 * [Aggregation](#aggregation) combines and de-dupes entries and presents them as a status timeline to the recipient user
 
 ## The components
