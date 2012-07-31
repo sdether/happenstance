@@ -20,11 +20,11 @@ The Identity server provides the status feed lookup for **{user}@{host}** identi
 **GET:/who/joe**
 ```javascript
 {
-  sig: '366e58644911fea255c44e7ab6468c6a5ec6b4d9d700a5ed3a810f56527b127e',
+  _sig: '366e58644911fea255c44e7ab6468c6a5ec6b4d9d700a5ed3a810f56527b127e',
   id: 'joe@droogindustries.com',
   name: 'Joe Smith',
-  status.uri: 'http://droogindustries.com/status',
-  feed.uri: 'http:/droogindustries.com/status/feed.hsf'
+  status_uri: 'http://droogindustries.com/status',
+  feed_uri: 'http:/droogindustries.com/status/feed.hsf'
 }
 ```
 The above specifies the minimum required information, although the entire feed metadata section may be served by this call.
@@ -56,8 +56,8 @@ The document itself contains two sets of information, the feed meta data and a s
       id: 'bob@drooginstustries.com',
       name: 'Bob Jones',
       profile_image.uri: 'http://droogindustries.com/bob.jpg',
-      status.uri: 'http://droogindustries.com/bob/status',
-      feed.uri: 'http://droogindustries.com/bob/status/feed',
+      status_uri: 'http://droogindustries.com/bob/status',
+      feed_uri: 'http://droogindustries.com/bob/status/feed',
     },
     ...
   ]
@@ -65,7 +65,7 @@ The document itself contains two sets of information, the feed meta data and a s
 ```
 Subscriptions is an optional way to display what users the feed owner follows, but is not required. Generally subscriptions are handled by aggregation servers and do not have to be public.
 
-For paging, two additional keys that may exist in the feed are `previous.uri` and `next.uri`. These keys allow callers to page through the feed without needing to know the implementation of the feed's API. 
+For paging, two additional keys that may exist in the feed are `previous_uri` and `next_uri`. These keys allow callers to page through the feed without needing to know the implementation of the feed's API. 
 
 #### Author Data
 
@@ -73,36 +73,36 @@ The minimum requirement for the meta data is defined below. Additional informati
 
 ```javascript
 {
-  sig: '80669bd0d0bc39a062f87107de126293d85347775152328bf464908430712856',
+  _sig: '80669bd0d0bc39a062f87107de126293d85347775152328bf464908430712856',
   id: 'joe@drooginstustries.com',
   name: 'Joe Smith',
-  profile_image.uri: 'http://droogindustries.com/joe.jpg',
-  status.uri: 'http://droogindustries.com/bob/status',
-  feed.uri: 'http:/droogindustries.com/bob/status/feed',
-  public.key: 'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
-  previous.keys: [
+  profile_image_uri: 'http://droogindustries.com/joe.jpg',
+  status_uri: 'http://droogindustries.com/bob/status',
+  feed_uri: 'http:/droogindustries.com/bob/status/feed',
+  public_key: 'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
+  previous_keys: [
     'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
     ],
-  previous.ids: [ 'joseph@smith.com' ],
+  previous_ids: [ 'joseph@smith.com' ],
   publishers: ['http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX'],
   aggregators: ['http://aggro.droogindustries.com/aggro/AgMBAAEwDQYJKoZIhvcNA']
 }
 ```
 #### Entry
 
-Entries are the status updates. They should be considered write-only, since once published, copies will exist in many downstream data-stores. There is a mechanism for advisory updates and deletes using `updates.id` and `deletes.id` keys, but it is up to the downstream implementer to determine whether those entries are respected, used to create revision history or applied permanently. The minimum set (except for `deletes.id` entries) is:
+Entries are the status updates. They should be considered write-only, since once published, copies will exist in many downstream data-stores. There is a mechanism for advisory updates and deletes using `updates_id` and `deletes_id` keys, but it is up to the downstream implementer to determine whether those entries are respected, used to create revision history or applied permanently. The minimum set (except for `deletes_id` entries) is:
 ```javascript
 {
-  sig: 'aadefbd0d0bc39a062f87107de126293d85347775152328bf464908430712789',
+  _sig: 'aadefbd0d0bc39a062f87107de126293d85347775152328bf464908430712789',
   id: '4AQlP4lP0xGaDAMF6CwzAQ'
   href: 'http://droogindustries.com/joe/status/feed/4AQlP4lP0xGaDAMF6CwzAQ',
-  created_at: ''2012-07-30T11:31:00Z',
+  created_at: '2012-07-30T11:31:00Z',
   author: {
     id: 'joe@drooginstustries.com',
     name: 'Joe Smith',
     profile_image.uri: 'http://droogindustries.com/joe.jpg',
-    status.uri: 'http://droogindustries.com/joe/status',
-    feed.uri: 'http://droogindustries.com/joe/status/feed',
+    status_uri: 'http://droogindustries.com/joe/status',
+    feed_uri: 'http://droogindustries.com/joe/status/feed',
   },
   text: 'Hey #{bob}, current status #{beach} #{vacation}',
   entities: {
@@ -113,7 +113,7 @@ Entries are the status updates. They should be considered write-only, since once
 }
 ```
 
-For re-posting someone else's status update, a `repost.href` key containing the original posts href can be included. In addition, it is recommended to also include the full entry under the `_repost` key (omitting it from signature requirements). The `text` of the status update can be used to add additional commentary.
+For re-posting someone else's status update, a `repost_href` key containing the original posts href can be included. In addition, it is recommended to also include the full entry under the `_repost` key (omitting it from signature requirements). The `text` of the status update can be used to add additional commentary.
 
 Additional optional fields are specified in the separate message spec.
 
@@ -133,7 +133,9 @@ Since this endpoint will likely be the target of spammers, implementers are advi
 
 ### PubSub
 
-The PubSub server is responsible to publishing status updates to all subscribers. Of two APIs, only one of which is required. This required API is rooted at any uri provided in the `author.publishers` list in a user's feed and is responsible for letting letting other systems subscribe to update entries. The methods supported by the endpoint are:
+The PubSub server is responsible to publishing status updates to all subscribers. It defines two REST APIs, one for creating and managing publication resources and one for creating and managing subscription resources per publication resource. Only the subscription API is required to be implemented, i.e. a pubsub server could be an integral part of the feed content management system and have no publicly exposed API for creating publications.
+
+The subscription REST API is always rooted at the uris provided by the `author.publishers` list in the feed and. The methods supported by the endpoint are:
 
 **POST:**
 ```javascript
@@ -154,7 +156,7 @@ To delete an existing subscription the **PubSub** server must implement the DELE
 
 **DELETE:{subscrition.uri}**
 
-PubSub may also implement an API for setting up subscription endpoints that the feed owner uses to set up the subscription. It's API is similar to subscriber API, but adds a POST endpoint at the subscription location that accepts messages with a body of `{ entries: [{entry}, ...] }`.
+PubSub may also implement an API for setting up subscription endpoints that the feed owner uses to set up the subscription. It's a REST API similar to subscriber API for creating and management a publication resource, but adds a POST endpoint at the subscription location that accepts messages with a body of `{ entries: [{entry}, ...] }`.
 
 The responsibility of PubSub is twofold:
 * deliver the entries posted to it to all its subscribers, and
@@ -174,6 +176,4 @@ Aggregators will likely want to integrate search greater than the data that pass
 
 ## Content Signing
 
-To generate or check a SHA256 signature hash for a json body in happenstance, the key value pairs are appended in alphanumeric order, skipping the `sig` key. Compound values are appended as if they were simply keys in the parent object. The resulting string is hashed and then signed with the private key.
-
-Keys that start with underscore are ommitted from signature calculation. This is done so that downstream consumers of messages can attach meta-data without invalidating the signature and clearly separates non-trusted keys from trusted keys.
+To generate or check a SHA256 signature hash for a json body in happenstance, the key value pairs are appended in alphanumeric order. Compound values are appended as if they were simply keys in the parent object. Keys that start with underscore are ommitted from signature calculation. This is done so that downstream consumers of messages can attach meta-data without invalidating the signature and clearly separates non-trusted keys from trusted keys. The resulting string is hashed and then signed with the private key.
