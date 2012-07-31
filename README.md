@@ -63,31 +63,47 @@ The minimum requirement for the meta data is defined below. Additional informati
   sig: '80669bd0d0bc39a062f87107de126293d85347775152328bf464908430712856',
   id: 'joe@drooginstustries.com',
   name: 'Joe Smith',
+  profile_image.uri: 'http://droogindustries.com/joe.jpg',
   status.uri: 'http://droogindustries.com/status',
-  feed.uri: 'http:/droogindustries.com/status/feed.hsf',
+  feed.uri: 'http:/droogindustries.com/status/feed',
   public.key: 'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
   previous.keys: [
     'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
     ],
   previous.ids: [ 'joseph@smith.com' ],
   publishers: ['http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX']
-  aggregators: ['http://aggro.droogindustries.com/aggre'
+  aggregators: ['http://aggro.droogindustries.com/aggro'
 }
 ```
 #### Entry
 
-Entries are the status updates. They should be considered write-only, since once published, copies will exist in many downstream data-stores. There is a mechanism for advisory updates and deletes using `updates.id` and `deletes.id` keys, but it is up to the downstream implementer to determine whether those entries are respected, used to create revision history or applied permanently. The minimum set (except for `deletes.id` entries is:
+Entries are the status updates. They should be considered write-only, since once published, copies will exist in many downstream data-stores. There is a mechanism for advisory updates and deletes using `updates.id` and `deletes.id` keys, but it is up to the downstream implementer to determine whether those entries are respected, used to create revision history or applied permanently. The minimum set (except for `deletes.id` entries) is:
 ```javascript
 {
   sig: 'aadefbd0d0bc39a062f87107de126293d85347775152328bf464908430712789',
   id: '4AQlP4lP0xGaDAMF6CwzAQ'
-  author.id: 'joe@drooginstustries.com',
-  author.name: 'Joe Smith',
-  status.uri: 'http://droogindustries.com/status',
-  feed.uri: 'http:/droogindustries.com/status/feed.hsf',
+  href: 'http://droogindustries.com/status/feed/4AQlP4lP0xGaDAMF6CwzAQ',
+  created_at: ''2012-07-30T11:31:00Z',
+  author: {
+    id: 'joe@drooginstustries.com',
+    name: 'Joe Smith',
+    profile_image.uri: 'http://droogindustries.com/joe.jpg',
+    status.uri: 'http://droogindustries.com/status',
+    feed.uri: 'http://droogindustries.com/status/feed',
+  },
+  text: 'Hey #{bob}, current status #{beach} #{vacation}',
+  entities: {
+    beach: 'http://droogindustries.com/images/beach.jpg',
+    bob: 'bob@foo.com',
+    vacation '#vacation'
+  }
 }
 ```
-It is suggested that entries also include an `href` to access the original, but it is not required.
+
+For re-posting someone else's status update, a `repost` key containing their full entry is included, while the `text` can be used to add additional commentary. Additional optional fields are specified in the separate message spec.
+
+While there is no way to enforce content size, since the content will replicated across the network and is meant as a status network not forum, the `text` field is assumed to be limited to 1000 characters and implementers are free to drop of truncate (which invalidates the signature) long messages.
+
 ### Aggregation
 
 ### PubSub
