@@ -133,7 +133,7 @@ Since this endpoint will likely be the target of spammers, implementers are advi
 
 ### PubSub
 
-The PubSub server is responsible to publishing status updates to all subscribers. The only API required is rooted at any uri provided in the `author.publishers` list in a user's feed. The methods supported by the endpoint are:
+The PubSub server is responsible to publishing status updates to all subscribers. Of two APIs, only one of which is required. This required API is rooted at any uri provided in the `author.publishers` list in a user's feed and is responsible for letting letting other systems subscribe to update entries. The methods supported by the endpoint are:
 
 **POST:**
 ```javascript
@@ -154,7 +154,15 @@ To delete an existing subscription the **PubSub** server must implement the DELE
 
 **DELETE:{subscrition.uri}**
 
-PubSub may also implement an API for setting up subscription endpoints that the feed owner uses to set up the subscription, but is not required and the API has no standard prescriptions.
+PubSub may also implement an API for setting up subscription endpoints that the feed owner uses to set up the subscription. It's API is similar to subscriber API, but adds a POST endpoint at the subscription location that accepts messages with a body of `{ entries: [{entry}, ...] }`.
+
+The responsibility of PubSub is twofold:
+* deliver the entries posted to it to all its subscribers, and
+* deliver the mentions enumerated in the entities object.
+
+The former does not have to be the exact entries document posted to it. It is up the implementation to determine whether it accumulates entries and/or combines them with other entries destinated for the same callback.uri/auth.header combination.
+
+The latter involves looking up the feed for a name entity via the nameserver and then post the mentioned entries to the aggregators listed in `author.aggregators`.
 
 ### Discovery
 
