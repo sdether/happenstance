@@ -140,17 +140,17 @@ The subscription REST API is always rooted at the uris provided by the `author.p
 **POST:**
 ```javascript
 {
-  callback.uri: 'http://aggro.droogindustries.com/aggro/AgMBAAEwDQYJKoZIhvcNA',
-  auth.header: 'X-Auth: wNTI1MDIwODUxWjAjMQs'
+  callback_uri: 'http://aggro.droogindustries.com/aggro/AgMBAAEwDQYJKoZIhvcNA',
+  auth_header: 'X-Auth: wNTI1MDIwODUxWjAjMQs'
 }
 ```
 _Response: **201 Created**_
 ```javascript
 {
-  subscription.uri: 'http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX/subscription/wDQYJKoZIhvcNAQEBBQADgY0AM',
+  subscription_uri: 'http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX/subscription/wDQYJKoZIhvcNAQEBBQADgY0AM',
 }
 ```
-The response also contains the `subscription.uri` in the location header. The optional `auth.header` in the POST will be included as a header in each publish callback, as will the location of the subscription (so that upon receiving a publication POST, the receiver can identify the caller in case the information was lost.
+The response also contains the `subscription_uri` in the location header. The optional `auth_header` in the POST will be included as a header in each publish callback, as will the location of the subscription (so that upon receiving a publication POST, the receiver can identify the caller in case the information was lost.
 
 To delete an existing subscription the **PubSub** server must implement the DELETE call:
 
