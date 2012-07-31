@@ -5,6 +5,17 @@ Happenstance is a specification and sample implementation for a _federated, dece
 
 The network is defined as a number of interoperating systems, that together form the network, but which can be implemented independently. All communication in the network is done over HTTP using JSON as the message payload.
 
+## The update workflow
+
+Before going into details of how the network is constructed, here's a 10k ft. view of the messaging workflow for status updates.
+
+* Sending user creates new feed entry in [Status Feed](#status-feed) system
+* [Status Feed](#status-feed) pushes entry to [PubSub](#pubsub)
+* [PubSub](#pubsub) pushes entry to recipients
+  * entry is pushed to all its subscribers, generally [Aggregation](#aggregation) servers
+  * Identity Entities in entries ( _mentions_ ) are resolved via the appropriate [Identity](#identity) server to locate the resposible Aggregation](#aggregation) servers, and pushed to those servers
+* [Aggregation](#aggregation) combines and de-dupes entries and presents them as a status timeline to the recipient user
+
 ## The components
 
 * [Identity](#identity)
