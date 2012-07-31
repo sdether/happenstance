@@ -183,7 +183,9 @@ Discovery has no formal definition. It is comprised with organic discovery via r
 
 Given that anyone can get real-time feeds delivery and the feeds of anyone mentioned in an entry or can be discovered via the name-servers it is relatively simple to get access to the communications of the ecosystem for permanent or ephemeral, complete or partial indexing as a service.
 
-Aggregators will likely want to integrate search greater than the data that passes through them, so they are the most likely customers of such services, but such integration will be custom and would not benefit for a formal definition at this stage of the ecosystem.
+Aggregators will likely want to integrate search capabilities greater than the data that passes through them, so they are the most likely customers of such services, but such integration will be custom and would not benefit for a formal definition at this stage of the ecosystem.
+
+It should be noted that especially early in the ecosystem's life, it is highly desirable to have a central indexer of the global feed and user base.
 
 ## Content Signing
 
