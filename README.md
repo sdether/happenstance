@@ -35,7 +35,7 @@ The Identity server provides the status feed lookup for **{user}@{host}** identi
   id: 'joe@droogindustries.com',
   name: 'Joe Smith',
   status_uri: 'http://droogindustries.com/status',
-  feed_uri: 'http:/droogindustries.com/status/feed.hsf'
+  feed_uri: 'http:/droogindustries.com/status/feed'
 }
 ```
 The above specifies the minimum required information, although the entire feed metadata section may be served by this call.
