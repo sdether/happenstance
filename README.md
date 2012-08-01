@@ -54,7 +54,7 @@ The canonical location of the status is always an HTML document including a `lin
 
 The link takes the form of:
 ```html
-<link rel="alternate" type="application/hsf+json" href="http://droogindustries.com/status/feed.hsf"/>
+<link rel="alternate" type="application/hsf+json" href="http://droogindustries.com/status/feed"/>
 ```
 
 The document itself contains two sets of information, the feed meta data and a subset of the feed entries.
