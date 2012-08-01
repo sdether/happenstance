@@ -126,7 +126,7 @@ Entries are the status updates. They should be considered write-only, since once
 
 For re-posting someone else's status update, a `repost_href` key containing the original posts href can be included. In addition, it is recommended to also include the full entry under the `_repost` key (omitting it from signature requirements). The `text` of the status update can be used to add additional commentary.
 
-Additional optional fields are specified in the separate message spec.
+Additional optional fields are specified in the separate message spec, as well as details on options for entities.
 
 While there is no way to enforce content size, since the content will replicated across the network and is meant as a status network not forum, the `text` field is assumed to be limited to 1000 characters and implementers are free to drop of truncate (which invalidates the signature) long messages.
 
@@ -136,7 +136,7 @@ While the feed is designed that it can be represented by static files, the autho
 
 ### Aggregation
 
-Aggregation server collect status updates for users to create their timeline. In general, aggregation servers will receive events from **PubSub** servers, but the same expected API is also used to push _mentions_ and private messages to a user.
+Aggregation server collect status updates for users to create their timeline. In general, aggregation servers will receive events from [PubSub](#pubsub) servers, but the same expected API is also used to push _mentions_ and private messages to a user.
 
 The only required API for an aggregation server is rooted at any uri provided in the `author.aggregators` list in a user's feed. This endpoint is expected to accept POST messages with a body of `{ entries: [{entry}, ...] }`.
 
@@ -146,36 +146,92 @@ Since this endpoint will likely be the target of spammers, implementers are advi
 
 The PubSub server is responsible to publishing status updates to all subscribers. It defines two REST APIs, one for creating and managing publication resources and one for creating and managing subscription resources per publication resource. Only the subscription API is required to be implemented, i.e. a pubsub server could be an integral part of the feed content management system and have no publicly exposed API for creating publications.
 
-The subscription REST API is always rooted at the uris provided by the `author.publishers` list in the feed and. The methods supported by the endpoint are:
+The responsibility of PubSub is twofold:
+* deliver the entries posted to publication endpoints to all its subscribers, and
+* deliver the mentions enumerated in the entities object.
+
+The latter involves looking up the feed for a name entity via the nameserver and then post the mentioned entries to the aggregators listed in `author.aggregators`.
+
+#### Create Subscription
+
+The subscription REST API is always rooted at the uris provided by the `author.publishers` list in the feed and. A subscription is created via a POST to a publisher uri.
 
 **POST:**
 ```javascript
 {
   callback_uri: 'http://aggro.droogindustries.com/aggro/AgMBAAEwDQYJKoZIhvcNA',
-  auth_header: 'X-Auth: wNTI1MDIwODUxWjAjMQs'
+  headers: {
+    token: 'wNTI1MDIwODUxWjAjMQs'
+  }
 }
 ```
-_Response: **201 Created**_
+_Response:**201 Created**_
 ```javascript
 {
   subscription_uri: 'http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX/subscription/wDQYJKoZIhvcNAQEBBQADgY0AM',
+  access_key: 'Tj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgM'
 }
 ```
-The response also contains the `subscription_uri` in the location header. The optional `auth_header` in the POST will be included as a header in each publish callback, as will the location of the subscription (so that upon receiving a publication POST, the receiver can identify the caller in case the information was lost.
+The response also contains the `subscription_uri` in the **Location** header. The `access_key` must be provided in modification requests as the **Access** header.
 
-To delete an existing subscription the **PubSub** server must implement the DELETE call:
+The optional `headers` can be any key value pairs and will be included in each POST to the `callback_uri`.
 
-**DELETE:{subscrition.uri}**
+#### Modify Subscription
+The subscription can be modified via PUT to the subscription uri with the **Access** header using the same request message format as the POST.
 
-PubSub may also implement an API for setting up subscription endpoints that the feed owner uses to set up the subscription. It's a REST API similar to subscriber API for creating and management a publication resource, but adds a POST endpoint at the subscription location that accepts messages with a body of `{ entries: [{entry}, ...] }`.
+**PUT:{subscription_uri}**
 
-The responsibility of PubSub is twofold:
-* deliver the entries posted to it to all its subscribers, and
-* deliver the mentions enumerated in the entities object.
+#### Delete Subscription
+The subscription can be deleted via DELETE  to the subscription uri with the **Access** header.
 
-The former does not have to be the exact entries document posted to it. It is up the implementation to determine whether it accumulates entries and/or combines them with other entries destinated for the same callback.uri/auth.header combination.
+**DELETE:{subscrition_uri}**
 
-The latter involves looking up the feed for a name entity via the nameserver and then post the mentioned entries to the aggregators listed in `author.aggregators`.
+#### Callback
+
+The callback uri is expected to accept POST requests with a body of `{ entries: [{entry}, ...] }`. The PubSub implementation may choose to deliver each entry in this body, accumulate multiple from a feed or even multiple from different feeds as long as the callback uri and headers match another subscription.
+
+#### Create publication
+
+PubSub may also implement an API for setting up subscription endpoints that the feed owner uses to set up the subscription. The base uri for this API is up to the implemtation -- there exists no automated discovery mechanism at this time.
+
+**POST:**
+```javascript```
+{
+  _sig: '80669bd0d0bc39a062f87107de126293d85347775152328bf464908430712856',
+  id: 'joe@droogindustries.com',
+  name: 'Joe Smith',
+  status_uri: 'http://droogindustries.com/bob/status',
+}
+```
+_Response:**201 Created**_
+```javascript
+{
+  publication_uri: 'http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX',
+  access_key: 'Tj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgM'
+}
+```
+The response also contains the `publication_uri` in the **Location** header. The `access_key` must be provided in modification requests as well as entry publication as the **Access** header.
+
+The optional `headers` can be any key value pairs and will be included in each POST to the `callback_uri`.
+
+#### Modify Publication
+The publication can be modified via PUT to the publication uri with the **Access** header using the same request message format as the POST.
+
+**PUT:{publication_uri}**
+
+#### Delete Publication
+The publication can be deleted via DELETE  to the publication uri with the **Access** header.
+
+**DELETE:{publication_uri}**
+
+#### Publishing entries
+
+**POST:{publication_uri}**
+```javascript
+{
+  entries: [{entry}, ...]
+}
+```
 
 ### Discovery
 
