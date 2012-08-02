@@ -160,6 +160,8 @@ The subscription REST API is always rooted at the uris provided by the `author.p
 ```javascript
 {
   callback_uri: 'http://aggro.droogindustries.com/aggro/AgMBAAEwDQYJKoZIhvcNA',
+  status_uri: 'http://droogindustries.com/joe/status',
+  feed_uri: 'http://droogindustries.com/joe/status/feed',
   headers: {
     token: 'wNTI1MDIwODUxWjAjMQs'
   }
@@ -174,7 +176,14 @@ _Response:**201 Created**_
 ```
 The response also contains the `subscription_uri` in the **Location** header. The `access_key` must be provided in modification requests as the **Access** header.
 
+`status_uri` and `feed_uri` are optional, but highly encouraged if the subscription is on behalf of a user rather another subsystem, such as an indexing service. Subscriber count and subscribing feeds is reported back to the publisher and used to generate follower lists.
+
 The optional `headers` can be any key value pairs and will be included in each POST to the `callback_uri`.
+
+#### Retrieve Subscription
+The current subscription resource can be fetched with a GET against the `subscription_uri`:
+
+**GET:{subscription_uri}**
 
 #### Modify Subscription
 The subscription can be modified via PUT to the subscription uri with the **Access** header using the same request message format as the POST.
@@ -213,6 +222,30 @@ _Response:**201 Created**_
 The response also contains the `publication_uri` in the **Location** header. The `access_key` must be provided in modification requests as well as entry publication as the **Access** header.
 
 The optional `headers` can be any key value pairs and will be included in each POST to the `callback_uri`.
+
+#### Retrieve Publication
+The current subscription resource can be fetched with a GET against the `publication_uri`:
+
+**GET:{publication_uri}**
+
+#### Retrieve Subscribers
+Information about the subscribers can be retrieved with a GET:
+
+**GET:{publication_uri}/subscribers**
+```javascript
+{
+  subscription_count: 123,
+  subscribing_feeds: [
+    {
+      status_uri: 'http://droogindustries.com/joe/status',
+      feed_uri: 'http://droogindustries.com/joe/status/feed',
+    },
+    ...
+  ]
+}
+```
+
+Paging of subscribers can be handled as with feeds, using `previous_uri` and `next_uri`. Since this is not meant as a realtime query mechanism there are no page size and other options. It is meant merely for retrieval for storage at the publishers application. Paging exists as an option for **PubSub** implementers to manage payloads.
 
 #### Modify Publication
 The publication can be modified via PUT to the publication uri with the **Access** header using the same request message format as the POST.
