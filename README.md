@@ -5,6 +5,9 @@ Happenstance is a specification and sample implementation for a _federated, dece
 
 The network is defined as a number of interoperating systems, that together form the network, but which can be implemented independently. All communication in the network is done over HTTP using JSON as the message payload.
 
+## Articles about Happenstance
+http://www.claassen.net/geek/blog/category/happenstance
+
 ## The update workflow
 
 Before going into details of how the network is constructed, here's a 10k ft. view of the messaging workflow for status updates.
