@@ -42,7 +42,7 @@ The signature block for any JSON block is always at key `_sig` and contains a `n
 }
 ```
 
-# Key generation
+## Key generation
 
 The private key is an RSA key in PEM format and can be generated with:
 ```
