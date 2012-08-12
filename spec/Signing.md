@@ -102,4 +102,8 @@ where
 * `public.pem` comes from `author.public_keys.{_sig.name}`
 
 ## Key expiration
-A public key block may contain an `expired` date.
+Because access to a key may be lost for many reasons, it is possible to expire a public key with an `expired` date. This date is advisory to anyone verifying the signature that if the message was created after that date, the message is invalid.
+
+Should the key in question actually be compromised, it is generally better to just remove the key entirely, since a bad actor with the compromised key could issue messages in the past. In this case affected messages need to be re-signed, so that someone trying to verify it, will fail and try to fetch the message again from its canonical uri (which has to be in a subpath of the feed) to ensure it exists and is valid at the source.
+
+Expiration is better suited for lost key, lost passphrase or access to a third party that is in charge of that key being lost.
