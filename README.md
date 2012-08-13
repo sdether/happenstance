@@ -8,6 +8,10 @@ The network is defined as a number of interoperating systems, that together form
 ## Articles about Happenstance
 http://www.claassen.net/geek/blog/category/happenstance
 
+## Note on status of this document
+
+As I am writing the sample implementations of the components and getting feedback, I am of course finding holes and oversights. I am striving to not let those findings detract me from keeping it simple and small. Until I have a working set of samples, I will keep this document in its informal state and write up a more traditional spec for each component at that point. 
+
 ## The update workflow
 
 Before going into details of how the network is constructed, here's a 10k ft. view of the messaging workflow for status updates.
@@ -34,7 +38,10 @@ The Identity server provides the status feed lookup for **{user}@{host}** identi
 **GET:/who/joe**
 ```javascript
 {
-  _sig: '366e58644911fea255c44e7ab6468c6a5ec6b4d9d700a5ed3a810f56527b127e',
+  _sig: {
+    name: 'key2',
+    sig: 'xfZ4DmrcLbz8qPJoTwYg/wIqggIKBBtzqnaiUu1Wess82wKdge+UsQEqU1hY2/0OrzgtUnzgn8nSWWPJtd6qtKbOTkPQqYDf2uVk6WTHYjwpysHmMj8fzrMkpE0ZPkPD8N7kEn1Rmt85CeXMDjYDN14H3Ep4iRNc7qxeNSR7xH8='
+  },
   id: 'joe@droogindustries.com',
   name: 'Joe Smith',
   status_uri: 'http://droogindustries.com/status',
@@ -87,17 +94,25 @@ The minimum requirement for the meta data is defined below. Additional informati
 
 ```javascript
 {
-  _sig: '80669bd0d0bc39a062f87107de126293d85347775152328bf464908430712856',
+  _sig: {
+    name: 'key2',
+    sig: 'xfZ4DmrcLbz8qPJoTwYg/wIqggIKBBtzqnaiUu1Wess82wKdge+UsQEqU1hY2/0OrzgtUnzgn8nSWWPJtd6qtKbOTkPQqYDf2uVk6WTHYjwpysHmMj8fzrMkpE0ZPkPD8N7kEn1Rmt85CeXMDjYDN14H3Ep4iRNc7qxeNSR7xH8='
+  },
   id: 'joe@drooginstustries.com',
   name: 'Joe Smith',
   profile_image_uri: 'http://droogindustries.com/joe.jpg',
   status_uri: 'http://droogindustries.com/bob/status',
   feed_uri: 'http:/droogindustries.com/bob/status/feed',
-  public_key: 'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
-  previous_keys: [
-    'MIIBvTCCASYCCQD55fNzc0WF7TANBgkqhkiG9w0BAQUFADAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwHhcNMTAwNTI4MDIwODUxWhcNMjAwNTI1MDIwODUxWjAjMQswCQYDVQQGEwJKUDEUMBIGA1UEChMLMDAtVEVTVC1SU0EwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANGEYXtfgDRlWUSDn3haY4NVVQiKI9CzThoua9+DxJuiseyzmBBe7Roh1RPqdvmtOHmEPbJ+kXZYhbozzPRbFGHCJyBfCLzQfVos9/qUQ88u83b0SFA2MGmQWQAlRtLy66EkR4rDRwTj2DzR4EEXgEKpIvo8VBs/3+sHLF3ESgAhAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAEZ6mXFFq3AzfaqWHmCy1ARjlauYAa8ZmUFnLm0emg9dkVBJ63aEqARhtok6bDQDzSJxiLpCEF6G4b/Nv/M/MLyhP+OoOTmETMegAVQMq71choVJyOFE5BtQa6M/lCHEOya5QUfoRF2HF9EjRF44K3OK+u3ivTSj3zwjtpudY5Xo='
-    ],
-  previous_ids: [ 'joseph@smith.com' ],
+  public_keys: {
+    key2: {
+      key: '-----BEGIN RSA PRIVATE KEY----- ...'
+    },
+    key1: {
+      key: '-----BEGIN RSA PRIVATE KEY----- ...',
+      expired: '2012-07-30T11:31:00Z'
+    }
+  },
+  altnerate_ids: [ 'joseph@smith.com' ],
   publishers: ['http://publish.droogindustries.com/publish/RPqdvmtOHmEPbJ+kX'],
   aggregators: ['http://aggro.droogindustries.com/aggro/AgMBAAEwDQYJKoZIhvcNA']
 }
@@ -107,7 +122,10 @@ The minimum requirement for the meta data is defined below. Additional informati
 Entries are the status updates. They should be considered write-only, since once published, copies will exist in many downstream data-stores. There is a mechanism for advisory updates and deletes using `updates_id` and `deletes_id` keys, but it is up to the downstream implementer to determine whether those entries are respected, used to create revision history or applied permanently. The minimum set (except for `deletes_id` entries) is:
 ```javascript
 {
-  _sig: 'aadefbd0d0bc39a062f87107de126293d85347775152328bf464908430712789',
+  _sig: {
+    name: 'key2',
+    sig: 'xfZ4DmrcLbz8qPJoTwYg/wIqggIKBBtzqnaiUu1Wess82wKdge+UsQEqU1hY2/0OrzgtUnzgn8nSWWPJtd6qtKbOTkPQqYDf2uVk6WTHYjwpysHmMj8fzrMkpE0ZPkPD8N7kEn1Rmt85CeXMDjYDN14H3Ep4iRNc7qxeNSR7xH8='
+  },
   id: '4AQlP4lP0xGaDAMF6CwzAQ'
   href: 'http://droogindustries.com/joe/status/feed/4AQlP4lP0xGaDAMF6CwzAQ',
   created_at: '2012-07-30T11:31:00Z',
@@ -118,7 +136,7 @@ Entries are the status updates. They should be considered write-only, since once
     status_uri: 'http://droogindustries.com/joe/status',
     feed_uri: 'http://droogindustries.com/joe/status/feed',
   },
-  text: 'Hey #{bob}, current status #{beach} #{vacation}',
+  text: 'Hey {{bob}}, current status {{beach}} {{vacation}}',
   entities: {
     beach: 'http://droogindustries.com/images/beach.jpg',
     bob: 'bob@foo.com',
@@ -281,4 +299,4 @@ It should be noted that especially early in the ecosystem's life, it is highly d
 
 ## Content Signing
 
-To generate or check a SHA256 signature hash for a json body in happenstance, the key value pairs are appended in alphanumeric order. Compound values are appended as if they were simply keys in the parent object. Keys that start with underscore are ommitted from signature calculation. This is done so that downstream consumers of messages can attach meta-data without invalidating the signature and clearly separates non-trusted keys from trusted keys. The resulting string is hashed and then signed with the private key.
+See [spec/Signing.md](https://github.com/sdether/happenstance/blob/master/spec/Signing.md)
