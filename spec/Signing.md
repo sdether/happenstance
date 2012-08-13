@@ -1,3 +1,7 @@
+## The Why of Signing
+Signing content is meant as a way to verify content without having to read it on the original feed. While an author's feed exists at a canonical (and therefore trusted) location, the system is meant to publish and distribute many copies of individual messages and especially in the case of mentions and reposts, there needs to exist a simple and reliable way to verify that the message came from the claimed origin.
+
+
 ## Author Meta Data
 The feed's `author` meta data contains a dictionary of public keys for that user's feed indexed by unique key names. Each key contains the RSA public certificate in PEM format under `key` and optionally a key expiration date under `expired`.
 
